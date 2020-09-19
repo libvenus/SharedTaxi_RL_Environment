@@ -15,7 +15,7 @@ from passenger import Passenger
 
 class SharedTaxi(discrete.DiscreteEnv): #Playground
     def __init__(self, no_of_rows, no_of_cols, no_of_actions, max_passengers):
-        P = {}
+        self.P = {}
         self.no_of_rows = no_of_rows
         self.no_of_cols = no_of_cols
         self.position_to_coordinates = {}
@@ -38,21 +38,26 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
         self.coordinates_to_position[(no_of_rows, no_of_cols)] = self.position_in_taxi
 
         self.states, self.state_to_no, self.no_to_state = self._get_states()
-        self.initial_state_distribution = np.zeros(len(self.states))
+        self.init_state_dist = np.zeros(len(self.states))
 
         state_keys = list(self.states.keys())
         random.shuffle(state_keys)
+
+        self._explore_environment(state_keys)
         
+        self.init_state_dist /= self.init_state_dist.sum()
+        discrete.DiscreteEnv.__init__(
+            self, len(self.states), self.no_of_actions, self.P, self.init_state_dist)
+
+    def _explore_environment(self, state_keys):
+
         for state in state_keys:
+            self.P[self.state_to_no[state]] = {action : [] for action in range(self.no_of_actions)}
 
-            P[self.state_to_no[state]] = {action : [] for action in range(self.no_of_actions)}
-
-            if self._is_state_valid(state):
-                self.initial_state_distribution[self.state_to_no[state]] += 1
+            if self._is_state_valid(state): self.init_state_dist[self.state_to_no[state]] += 1
             
             for action in range(self.no_of_actions):
                 taxi_loc, pass1_loc, pass1_dest, pass2_loc, pass2_dest = self._get_pos_from_state(state)
-
                 done = False
                 taxi = self.states[state][0]
                 taxi_row, taxi_col = self.position_to_coordinates[taxi_loc]
@@ -72,21 +77,17 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
                 elif action == 5: #Drop
                     reward, passengers, done = self._drop_passengers(state, reward, taxi_loc)
 
-                taxi_loc = self.coordinates_to_position[(taxi_row, taxi_col)]
-                pass1_loc = passengers[0].get_location()
+                taxi_loc   = self.coordinates_to_position[(taxi_row, taxi_col)]
+                pass1_loc  = passengers[0].get_location()
                 pass1_dest = passengers[0].get_destination()
-                pass2_loc = passengers[1].get_location()
+                pass2_loc  = passengers[1].get_location()
                 pass2_dest = passengers[1].get_destination()
 
                 next_state = self.encode(taxi_loc, pass1_loc, pass2_loc, pass1_dest, pass2_dest)                      
                 next_state_no = self.state_to_no[next_state]
-                P[self.state_to_no[state]][action].append((1.0, next_state_no, reward, done))
+                self.P[self.state_to_no[state]][action].append((1.0, next_state_no, reward, done))
                 if done == True:
                     print('state action next_state reward', state, action, next_state, reward)
-
-        self.initial_state_distribution /= self.initial_state_distribution.sum()
-        discrete.DiscreteEnv.__init__(
-            self, len(self.states), self.no_of_actions, P, self.initial_state_distribution)
 
     def _is_state_valid(self, state):
         taxi_loc, pass1_loc, pass1_dest, pass2_loc, pass2_dest = self._get_pos_from_state(state)
