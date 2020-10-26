@@ -16,7 +16,7 @@ We can see below that the state space increases very rapidly and this reflects i
 	3.4 X 4 grid – 16 * 17 * 17 * 16 * 16  ~ 1 million states
 	4.5 X 5 grid – 25 * 26 * 26 * 25 * 25  ~ 10 million states
 
-Actions on the other hand are an agent's way to interact with and change the environment. An action might bring about a change in the environment in the form of a state. The resulting state could be positive or negative with respect to the end goal of the agent - Maximization of long term reward. For example, consider that the SharedTaxi environment starts with a state in which both the passengers are in a taxi with destination as the same location where the taxi is at the moment. The agent takes an action of moving north and this brings about a change in the environment in the form of a new state. The state transition is also associated with a reward or penalty (-ve reward) which suggests if the previous action helped the agent in getting closer to its ultimate goal (dropping passengers + maintaining taxi capacity). The SharedTaxi has following actions:
+Actions on the other hand are an agent's way to interact with and change the environment. Actions are generally goverened or selected based on a policy, that the agent learns while training. An action might bring about a change in the environment in the form of a state. The resulting state could be positive or negative with respect to the end goal of the agent - Maximization of long term reward. For example, consider that the SharedTaxi environment starts with a state in which both the passengers are in a taxi with destination as the same location where the taxi is at the moment. The agent takes an action of moving north and this brings about a change in the environment in the form of a new state. The state transition is also associated with a reward or penalty (-ve reward) which suggests if the previous action helped the agent in getting closer to its ultimate goal (dropping passengers + maintaining taxi capacity). The SharedTaxi has following actions:
 
 	1. Move South - 0
 	2. Move North - 1
@@ -24,6 +24,8 @@ Actions on the other hand are an agent's way to interact with and change the env
 	4. Move West  - 3
 	5. Pick-up passenger - 4
 	6. Drop-off passenger - 5
+
+Policy is an agent's strategy to accomplish a task. It defines how an agent would behave in a specific state, at a given time. It is a probability distribution over all actions given states.
 
 ## Code details
 The entire functionality is abstracted into the following Python modules:
