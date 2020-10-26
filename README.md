@@ -37,6 +37,7 @@ The entire functionality is abstracted into the following Python modules:
 	
 ## Todo
 
+
 1. Visualization - represent and render agent's interaction with environment and vice-versa pictorially.
 2. Performance - replace table based Q-learning with Deep Neural network based as that will help perform and scale better
 3. Dynamics - improve environment dynamics and make the environment a closer approximation to its real world counterpart
