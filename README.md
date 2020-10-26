@@ -1,7 +1,7 @@
 # SharedTaxi - A Reinforcement Learning Environment
-An Environment that simulates surroundings and conditions for a SharedTaxi to live-in, operate and learn.  The environment closely resembles a shared taxi with two passengers and helps in training autonomous agents. It is "generic" and adapts to the dimensions specified while initializing it. It balances taxi capacity and passenger(s) pickup/drop, however, preference is always given to passengers’ pickup and drop.  For simplicity, a grid is chosen as the physical representation of the environment with hurdles and diversions.
+An Environment that simulates surroundings and conditions for a SharedTaxi to live-in, operate and learn. It is "generic" and adapts to the dimensions specified at start-up. The environment balances both taxi capacity and passenger(s) pickup/drop, however, preference is always given to passengers’ pickup and drop.  For simplicity and ease of representation, a grid is chosen as the physical representation of the environment with hurdles and diversions. The number of passengers are initialized to two for performance and solution convergence reasons.
 
-The environment simulates an episodic Markov decision process and ends once both the passengers are dropped at their respective destinations. It starts at an initial state and yields a subsequent state and reward every time it receives an action input. The state’s (a.k.a. observations) dimensions are controlled by the following entities’ location:
+A typical interaction with the environment depicts an episodic Markov decision process that start at a random state, and ends once both the passengers are dropped at their respective destinations. The interaction starts at an initial state and yields a subsequent state and reward every time the environment receives an action input. The state can be thought of as a snapshot of the grid with different objects/actors(taxi & passengers) positions. The state’s (a.k.a. observations) dimensions are controlled by the following entities’ location:
 
 	1.Taxi’s location – (no of rows X no of cols). For example, in a 5 X 5 grid, the no of locations a taxi can be is 25  
 	2.First passenger’s pickup location – (no of rows X no of cols) + 1 . 1 position extra as the passenger could also be in the taxi in the initial state 
@@ -15,6 +15,15 @@ We can see below that the state space increases very rapidly and this reflects i
 	2.3 X 3 grid – 9  * 10  * 10 * 9 * 9  = 72900 states
 	3.4 X 4 grid – 16 * 17 * 17 * 16 * 16  ~ 1 million states
 	4.5 X 5 grid – 25 * 26 * 26 * 25 * 25  ~ 10 million states
+
+Actions on the other hand are an agent's way to interact with and change the environment. An action might bring about a change in the environment in the form of a state. The resulting state could be positive or negative with respect to the end goal of the agent - Maximization of long term reward. For example, consider that the SharedTaxi environment starts with a state in which both the passengers are in a taxi with destination as the same location where the taxi is at the moment. The agent takes an action of moving north and this brings about a change in the environment in the form of a new state. The state transition is also associated with a reward or penalty (-ve reward) which suggests if the previous action helped the agent in getting closer to its ultimate goal (dropping passengers + maintaining taxi capacity). The SharedTaxi has following actions:
+
+	1. Move South - 0
+	2. Move North - 1
+	3. Move East  - 2
+	4. Move West  - 3
+	5. Pick-up passenger - 4
+	6. Drop-off passenger - 5
 
 ## Code details
 The entire functionality is abstracted into the following Python modules:
