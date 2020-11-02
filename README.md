@@ -34,6 +34,9 @@ The entire functionality is abstracted into the following Python modules:
 	2. taxi.py - Encapsulates the taxi and related operations
 	3. passenger.py - Encapsulates the passenger and related operations
 	4. sharedtaxi_test.py - The driver/wrapper that initializes the SharedTaxi envrionment, helps the agent interact with the environment and learn
+
+## Dependencies
+No other dependency other that OpenAI's gym environment and common Python libraries
 	
 ## Todo
 
