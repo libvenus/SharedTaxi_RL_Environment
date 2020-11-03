@@ -6,6 +6,7 @@ if __name__ == '__main__':
 
     env = SharedTaxi(2, 2, 6, 2)
 
+    #Random agent - uncomment to test
     """
     initial_state = env.s = 701
     done = False
@@ -56,6 +57,8 @@ if __name__ == '__main__':
     print("Penalties incurred: {}".format(penalties))
 
     """
+
+    #Q-learning based agent
     q_table = np.zeros([env.observation_space.n, env.action_space.n])
 
     # Hyperparameters

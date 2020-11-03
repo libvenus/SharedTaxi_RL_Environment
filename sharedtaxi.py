@@ -62,6 +62,10 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
                 taxi = self.states[state][0]
                 taxi_row, taxi_col = self.position_to_coordinates[taxi_loc]
                 passengers = self.states[state][1:]
+
+                #Increase the capacity penalty to see behavioral changes in the agent.
+                #The agent will start giving more preference to maintaining optimum capacity
+                #than to drop the passenger
                 reward = - 1 - (taxi.get_max_capacity() - taxi.get_no_of_passengers()) * 5
                 
                 if action == 0: #move south
@@ -115,6 +119,13 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
         return taxi_loc, pass1_loc, pass1_dest, pass2_loc, pass2_dest
 
     def create_visual_grid(self, no_of_rows, no_of_cols):
+        """
+        Visualization based on the two dimensional grid size passed
+            - number of rows 
+            - number of columns 
+        Adds random pipes - '|' signifying hurdles that the agent cannot cross directly
+
+        """
         visual_grid = []
         locations = [' ' for _ in range(no_of_cols)]
 
@@ -194,6 +205,7 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
         no_of_dests = self.no_of_rows * self.no_of_cols
         no_of_locs  = no_of_dests + 1 #+ 1 for being in taxi
 
+        #What a mess - think of a way to eliminate the nestedness
         for taxi_loc in range(no_of_dests):
             for pass1_loc in range(no_of_locs): 
                 for pass2_loc in range(no_of_locs): 
@@ -227,6 +239,18 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
         return states, state_to_no, no_to_state
 
     def encode(self, taxi_loc, pass1_loc, pass2_loc, pass1_dest, pass2_dest):
+        """
+        Returns a string that reprsents a unique state based on the following variables
+            - taxi location
+            - first passenger's starting location
+            - second passenger's starting location
+            - first passenger's destination location
+            - second passenger's destination location
+
+        Location is an integer that points to a specific (row,col) position in the grid.
+        For example, in a 2 by 2 grid with 4 different (row, col) combinations, 0 location
+        translates to a (0, 0) cell in the grid
+        """
         # (5) 5, 5, 4
         taxi_row, taxi_col = self.position_to_coordinates[taxi_loc]
         pass1_loc_row, pass1_loc_col = self.position_to_coordinates[pass1_loc]
@@ -243,6 +267,18 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
         return encoded_state
 
     def decode(self, state):
+        """
+        Returns a list with the following based on the state passed in as a parameter
+            - taxi location
+            - first passenger's starting location
+            - second passenger's starting location
+            - first passenger's destination location
+            - second passenger's destination location
+
+        Location is an integer that points to a specific (row,col) position in the grid.
+        For example, in a 2 by 2 grid with 4 different (row, col) combinations, 0 location
+        translates to a (0, 0) cell in the grid
+        """
 
         positions = [int(position) for position in state]
         
@@ -255,6 +291,9 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
         return taxi_loc, pass1_loc, pass2_loc, pass1_dest, pass2_dest
 
     def render(self, mode='human'):
+        """
+        Visualization in conjunction with create_visual_grid
+        """
         outfile = StringIO() if mode == 'ansi' else sys.stdout
         snapshot = ""
 
@@ -268,7 +307,6 @@ class SharedTaxi(discrete.DiscreteEnv): #Playground
 
         outfile.write("\n".join(["".join(row) for row in out]) + "\n")
 
-        #positions = self.decode(self.no_to_state[self.s]) #What is the purpose of decode
         state_objs = self.states[self.no_to_state[self.s]]
         taxi, passengers = state_objs[0], state_objs[1:]
         taxi_row, taxi_col = self.position_to_coordinates.get(taxi.get_location())
