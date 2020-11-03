@@ -36,7 +36,7 @@ The entire functionality is abstracted into the following Python modules:
 	4. sharedtaxi_test.py - The driver/wrapper that initializes the SharedTaxi envrionment, helps the agent interact with the environment and learn
 
 ## Dependencies
-No other dependency other that OpenAI's gym environment and common Python libraries
+No other dependency other that OpenAI's Gym toolkit and common Python libraries
 	
 ## Todo
 
