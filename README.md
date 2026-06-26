@@ -1,4 +1,4 @@
-# SharedTaxi - A Reinforcement Learning Environment
+## SharedTaxi - A Reinforcement Learning Environment
 
 ### What is Reinforcement Learning?
 Reinforcement Learning is a machine learning concept wherein a software agent learns to perform certain actions in its environment (playground) so as to maximize its final cumulative reward or output. The agent learns by exploring and exploiting the environment by repeated trials. For instance, a toddler trying to walk, pick garbage and throw it in a nearby dustbin. Here the toddler is the agent, and surroundings along with other objects make-up the environment. The toddler learns what actions are best for his/her long term goal based on small tiny steps and actions that he/she performs while executing the task (a.k.a. episode).
