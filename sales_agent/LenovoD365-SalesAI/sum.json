@@ -1,0 +1,282 @@
+{
+  "trace_id": "tr_d16db1e742d3407fb0e180367f109e5f",
+  "meeting_id": "20d0030d-d450-422f-ac78-a00a4a6a1755",
+  "latency_ms": 47816,
+  "valid_json": true,
+  "summary": {
+    "meetingHeader": {
+      "title": "Deutsche Bank – Workstation Refresh FY25",
+      "date": "6/12/26",
+      "time": "",
+      "duration": "",
+      "platform": "",
+      "attendees": [
+        {
+          "name": "Nazeer",
+          "email": "",
+          "role": "Seller"
+        },
+        {
+          "name": "Ranjeet",
+          "email": "",
+          "role": "Customer"
+        },
+        {
+          "name": "Ameer",
+          "email": "",
+          "role": "Customer"
+        }
+      ]
+    },
+    "meetingSummary": {
+      "keyPoints": [
+        {
+          "id": "KP001",
+          "point": "Customer volume increased to around 1,400 units from the earlier 1,200.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T00:21-01:10"
+          ],
+          "isAmbiguous": true
+        },
+        {
+          "id": "KP002",
+          "point": "Delivery is required before June 20th.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T01:11-01:40"
+          ],
+          "isAmbiguous": false
+        },
+        {
+          "id": "KP003",
+          "point": "ThinkStation remains the preferred configuration; ProSupport+ shouldbe included.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T02:16-02:45"
+          ],
+          "isAmbiguous": false
+        },
+        {
+          "id": "KP004",
+          "point": "Seller will revalidate pricing and logistics and update the proposalwith revised quantity and support.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T01:41-02:15",
+            "T02:46-03:20"
+          ],
+          "isAmbiguous": false
+        },
+        {
+          "id": "KP005",
+          "point": "Budget is roughly aligned at around $180K, subject to validation after the revised quote.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T03:21-03:40"
+          ],
+          "isAmbiguous": true
+        },
+        {
+          "id": "KP006",
+          "point": "Updated proposal to be sent by end of this week; follow-up meeting to be scheduled early next week.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T03:41-04:20"
+          ],
+          "isAmbiguous": true
+        },
+        {
+          "id": "KP007",
+          "point": "Customer will review internally and revert on approval.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T04:21-05:00"
+          ],
+          "isAmbiguous": false
+        }
+      ],
+      "confirmedNextSteps": [
+        {
+          "id": "NS001",
+          "task": "Send updated proposal reflecting  ~1,400 units and ProSupport+ inclusion.",
+          "owner": "Nazeer",
+          "dueDate": "",
+          "status": "Pending",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T02:46-03:20"
+          ]
+        },
+        {
+          "id": "NS002",
+          "task": "Send the updated proposal by end of this week.",
+          "owner": "Nazeer",
+          "dueDate": "",
+          "status": "Pending",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T03:41-04:20"
+          ]
+        },
+        {
+          "id": "NS003",
+          "task": "Schedule a follow-up meeting early next week.",
+          "owner": "Nazeer",
+          "dueDate": "",
+          "status": "Pending",
+          "confidence": "Medium",
+          "transcriptRefs": [
+            "T03:41-04:20"
+          ]
+        },
+        {
+          "id": "NS004",
+          "task": "Validate final numbers upon receiving the revised quote.",
+          "owner": "Ameer",
+          "dueDate": "",
+          "status": "Pending",
+          "confidence": "Medium",
+          "transcriptRefs": [
+            "T03:21-03:40"
+          ]
+        },
+        {
+          "id": "NS005",
+          "task": "Review internally and revert on approval.",
+          "owner": "Ranjeet",
+          "dueDate": "",
+          "status": "Pending",
+          "confidence": "Medium",
+          "transcriptRefs": [
+            "T04:21-05:00"
+          ]
+        }
+      ],
+      "dealUpdatesDetected": [
+        {
+          "id": "DU001",
+          "entity": "Opportunity",
+          "field": "Quantity",
+          "currentValue": "1,200 units",
+          "suggestedValue": "around 1,400 units",
+          "reasoning": "Customer stated the volume has increased from 1,200 to around 1,400 units.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T00:21-01:10"
+          ]
+        },
+        {
+          "id": "DU002",
+          "entity": "Opportunity",
+          "field": "Support Level",
+          "currentValue": "",
+          "suggestedValue": "ProSupport+",
+          "reasoning": "Customer requested ProSupport+ to be included.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T02:16-02:45"
+          ]
+        },
+        {
+          "id": "DU003",
+          "entity": "Opportunity",
+          "field": "Delivery Timeline",
+          "currentValue": "",
+          "suggestedValue": "Before June 20th",
+          "reasoning": "Customer needs delivery before June 20th for rollout.",
+          "confidence": "High",
+          "transcriptRefs": [
+            "T01:11-01:40"
+          ]
+        },
+        {
+          "id": "DU004",
+          "entity": "Opportunity",
+          "field": "Budget",
+          "currentValue": "",
+          "suggestedValue": "around $180K",
+          "reasoning": "Customer indicated budget is roughly aligned at around $180K, pending final validation.",
+          "confidence": "Medium",
+          "transcriptRefs": [
+            "T03:21-03:40"
+          ]
+        }
+      ],
+      "openQuestions": [],
+      "sentiment": {
+        "customerSentiment": "Positive",
+        "reasoning": "Customer confirmed product preference, requested enhanced support,increased volume, and aligned on next steps. Budget appears roughly aligned pending validation.",
+        "confidence": "Medium",
+        "transcriptRefs": [
+          "T00:21-01:10",
+          "T01:11-01:40",
+          "T02:16-02:45",
+          "T03:21-03:40",
+          "T03:41-04:20",
+          "T04:21-05:00"
+        ]
+      },
+      "crmUpdates": {
+        "accountName": {
+          "value": "Deutsche Bank",
+          "confidence": "High",
+          "transcriptRefs": []
+        },
+        "opportunityName": {
+          "value": "Deutsche Bank – Workstation Refresh FY25",
+          "confidence": "High",
+          "transcriptRefs": []
+        },
+        "dealStage": {
+          "value": "",
+          "confidence": "Low",
+          "transcriptRefs": []
+        },
+        "forecastCategory": {
+          "value": "",
+          "confidence": "Low",
+          "transcriptRefs": []
+        },
+        "dealAmount": {
+          "value": "",
+          "confidence": "Low",
+          "transcriptRefs": []
+        },
+        "closeDate": {
+          "value": "",
+          "confidence": "Low",
+          "transcriptRefs": []
+        },
+        "nextStep": {
+          "value": "Send updated proposal by end of this week and schedule a follow-up early next week.",
+          "confidence": "High",
+          "transcriptRefs": []
+        },
+        "nextMeetingDate": {
+          "value": "",
+          "confidence": "Low",
+          "transcriptRefs": []
+        },
+        "customerSentiment": {
+          "value": "Positive",
+          "confidence": "Medium",
+          "transcriptRefs": []
+        },
+        "dealHealth": {
+          "value": "",
+          "confidence": "Low",
+          "transcriptRefs": []
+        }
+      },
+      "summaryQualityNotes": [
+        "Budget figure is approximate and pending validation after the revised quote.",
+        "Delivery timeline is specified as 'before June 20th' without an exact date.",
+        "No meeting platform provided.",
+        "Attendee emails are not provided.",
+        "Several next steps lack specific due dates (e.g., 'early next week')."
+      ]
+    }
+  },
+  "raw_text": null,
+  "downstream_status": "error"
+}

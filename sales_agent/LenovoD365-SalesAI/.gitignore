@@ -1,0 +1,48 @@
+# Deployment-focused ignore rules
+
+# Documentation and planning
+*.md
+
+# Local virtual environments
+env/
+.venv/
+venv/
+
+# Python caches and local artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Test and dev-only files
+tests/
+test.py
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# IDE/editor metadata
+.vscode/
+.idea/
+.cursor/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local logs/runtime output
+*.log
+
+# Local database dumps and ad-hoc data artifacts
+db/dump.json
+db/chat_history.json
+agents/summary_agent/Demo.txt
+
+# Optional local front-end/dev surfaces not required for server deployment
+ui/
+web/
+
+# Local Vexa integration
+vexa/

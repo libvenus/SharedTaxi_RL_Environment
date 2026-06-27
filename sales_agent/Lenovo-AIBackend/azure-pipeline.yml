@@ -1,0 +1,37 @@
+trigger:
+  branches:
+    include:
+      - development
+
+pool:
+  name: Dev
+
+steps:
+- checkout: self
+
+- script: |
+    echo "Stopping existing AI backend container..."
+    docker stop lenovo-ai-backend || true
+    docker rm lenovo-ai-backend || true
+  displayName: 'Stop Existing Container'
+
+- script: |
+    echo "Building Docker image..."
+    docker build --no-cache -t lenovo-aibackend:$(Build.BuildId) .
+  displayName: 'Build Docker Image'
+
+- script: |
+    echo "Running AI backend container..."
+    docker run -d \
+      --name lenovo-ai-backend \
+      --restart unless-stopped \
+      --env-file .env \
+      -p 9101:9101 \
+      lenovo-aibackend:$(Build.BuildId)
+  displayName: 'Deploy Container'
+
+- script: |
+    docker ps
+    docker logs lenovo-ai-backend 
+
+  displayName: 'Verify Deployment'

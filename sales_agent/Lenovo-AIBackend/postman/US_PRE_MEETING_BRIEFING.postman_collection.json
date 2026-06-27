@@ -1,0 +1,431 @@
+{
+  "info": {
+    "_postman_id": "us-pre-meeting-briefing-2026-09",
+    "name": "Lenovo — Pre-Meeting Briefing Card (Sprint 2)",
+    "description": "End-to-end Postman collection for the Pre-Meeting Briefing Card user story.\n\n**Prereqs**\n1. D365 Sales running: `uvicorn app.main:app --reload --port 8000` (v0.18.0+)\n2. AIBackend running: `uvicorn app.main:app --reload --port 8001`\n3. Postgres migrations applied:\n   - AIBackend: `sql/2026_09_us06_meeting_briefing.sql`\n4. Set collection variables (Variables tab):\n   - `sellerId` — UUID matching `opportunity.owninguser` in D365\n   - `opportunityId` — open deal UUID owned by seller\n   - `accountId` — optional account UUID\n\n**Run order**\nExecute folders top-to-bottom. Steps 03+ auto-save `meetingId`, `prepTaskId`, `prepNoteId`.\n\n**Repos**\n- D365 facts: `GET {{d365BaseUrl}}/api/briefing/context`\n- Briefing card: `GET {{aiBaseUrl}}/ai-api/meeting-prep/{meetingId}/briefing`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "d365BaseUrl", "value": "http://localhost:8000", "type": "string" },
+    { "key": "aiBaseUrl", "value": "http://localhost:8001", "type": "string" },
+    { "key": "sellerId", "value": "055DAFE7-9840-451D-8328-5F70A6326C03", "type": "string" },
+    { "key": "opportunityId", "value": "REPLACE-WITH-OPEN-OPP-UUID", "type": "string" },
+    { "key": "accountId", "value": "", "type": "string" },
+    { "key": "meetingId", "value": "", "type": "string" },
+    { "key": "prepTaskId", "value": "1", "type": "string" },
+    { "key": "prepNoteId", "value": "1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "00 · Health checks",
+      "item": [
+        {
+          "name": "D365 health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{d365BaseUrl}}/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('D365 is up', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "AIBackend docs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{aiBaseUrl}}/docs"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('AIBackend is up', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "01 · D365 Sales — briefing facts",
+      "item": [
+        {
+          "name": "GET briefing context (facts + signals)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{d365BaseUrl}}/api/briefing/context?sellerId={{sellerId}}&opportunityId={{opportunityId}}&maxSummaryWords=100",
+              "host": ["{{d365BaseUrl}}"],
+              "path": ["api", "briefing", "context"],
+              "query": [
+                { "key": "sellerId", "value": "{{sellerId}}" },
+                { "key": "opportunityId", "value": "{{opportunityId}}" },
+                { "key": "accountId", "value": "{{accountId}}", "disabled": true },
+                { "key": "maxSummaryWords", "value": "100" }
+              ]
+            },
+            "description": "Called internally by AIBackend during briefing generation. AI team can call directly to inspect grounded facts JSON."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('Has account + deal sections', () => {",
+                  "    pm.expect(body).to.have.property('account');",
+                  "    pm.expect(body).to.have.property('deal');",
+                  "    pm.expect(body).to.have.property('signals');",
+                  "});",
+                  "if (body.accountId) {",
+                  "    pm.collectionVariables.set('accountId', body.accountId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET briefing context — missing sellerId (422)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{d365BaseUrl}}/api/briefing/context?opportunityId={{opportunityId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 422', () => pm.response.to.have.status(422));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 · AIBackend — Meeting Prep list",
+      "item": [
+        {
+          "name": "GET meetings — today",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{aiBaseUrl}}/ai-api/meeting-prep/meetings?filter=today&sellerId={{sellerId}}",
+              "host": ["{{aiBaseUrl}}"],
+              "path": ["ai-api", "meeting-prep", "meetings"],
+              "query": [
+                { "key": "filter", "value": "today" },
+                { "key": "sellerId", "value": "{{sellerId}}" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const list = pm.response.json();",
+                  "pm.test('Response is array', () => pm.expect(list).to.be.an('array'));",
+                  "if (list.length > 0 && list[0].meeting_id) {",
+                  "    pm.collectionVariables.set('meetingId', list[0].meeting_id);",
+                  "    console.log('Saved meetingId =', list[0].meeting_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET meetings — this_week",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/meetings?filter=this_week&sellerId={{sellerId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 · AIBackend — Setup meeting (if list empty)",
+      "item": [
+        {
+          "name": "POST create meeting (links seller + opportunity)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"meeting_start_time\": \"2026-06-25T10:00:00\",\n  \"meeting_end_time\": \"2026-06-25T11:00:00\",\n  \"platform\": \"Microsoft Teams\",\n  \"title\": \"ThinkPad Fleet Proposal Review\",\n  \"account_name\": \"Infosys\",\n  \"attendees_emails\": \"buyer@customer.com,procurement@customer.com\",\n  \"opportunity\": \"{{opportunityId}}\",\n  \"meeting_url\": \"https://teams.microsoft.com/l/meetup-join/example\",\n  \"seller_id\": \"{{sellerId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep",
+            "description": "Creates a row in tbl_schedule_meetings. After create, set meetingId manually from DB or re-run list step.\n\nNote: opportunity_id/account_id on the meeting row may need a DB update if your create path does not set UUID columns — verify meeting has opportunity_id before briefing."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Success message', () => {",
+                  "    pm.expect(pm.response.json().success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 · AIBackend — Briefing card",
+      "item": [
+        {
+          "name": "GET briefing card (auto-generate on first open)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/briefing?sellerId={{sellerId}}",
+              "host": ["{{aiBaseUrl}}"],
+              "path": ["ai-api", "meeting-prep", "{{meetingId}}", "briefing"],
+              "query": [{ "key": "sellerId", "value": "{{sellerId}}" }]
+            },
+            "description": "Primary FE endpoint when seller opens Meeting Prep card. Returns all 7 sections + header."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('Briefing sections present', () => {",
+                  "    pm.expect(body).to.have.property('header');",
+                  "    pm.expect(body).to.have.property('account_summary');",
+                  "    pm.expect(body).to.have.property('deal_summary');",
+                  "    pm.expect(body).to.have.property('recent_signals');",
+                  "    pm.expect(body).to.have.property('prep_tasks');",
+                  "    pm.expect(body).to.have.property('my_prep_notes');",
+                  "});",
+                  "if (body.prep_tasks && body.prep_tasks.length > 0) {",
+                  "    pm.collectionVariables.set('prepTaskId', String(body.prep_tasks[0].id));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET briefing card — force refresh",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/briefing?sellerId={{sellerId}}&refresh=true"
+          }
+        },
+        {
+          "name": "GET briefing — missing sellerId (422)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/briefing"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 422', () => pm.response.to.have.status(422));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 · AIBackend — Prep tasks",
+      "item": [
+        {
+          "name": "PATCH mark prep task done",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"done\": true }",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/prep-tasks/{{prepTaskId}}?sellerId={{sellerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Task marked done', () => {",
+                  "    pm.expect(pm.response.json().done).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH unmark prep task (reopen)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"done\": false }",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/prep-tasks/{{prepTaskId}}?sellerId={{sellerId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 · AIBackend — My Prep Notes",
+      "item": [
+        {
+          "name": "GET prep notes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/prep-notes?sellerId={{sellerId}}"
+          }
+        },
+        {
+          "name": "POST typed prep note",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Confirm legal review timeline before close.\",\n  \"note_type\": \"typed\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/prep-notes?sellerId={{sellerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "if (body.id) pm.collectionVariables.set('prepNoteId', String(body.id));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST voice prep note (transcript)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transcript\": \"Customer mentioned phased delivery in July and August. Follow up with logistics.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/prep-notes/voice?sellerId={{sellerId}}",
+            "description": "AI/FE integration: post STT transcript here after voice recording."
+          }
+        },
+        {
+          "name": "PATCH edit prep note",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"body\": \"Updated: confirm legal review and procurement sign-off.\" }",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/prep-notes/{{prepNoteId}}?sellerId={{sellerId}}"
+          }
+        },
+        {
+          "name": "DELETE prep note",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/{{meetingId}}/prep-notes/{{prepNoteId}}?sellerId={{sellerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "07 · Re-verify list pending count",
+      "item": [
+        {
+          "name": "GET meetings — verify prep_tasks_pending_count decreased",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{aiBaseUrl}}/ai-api/meeting-prep/meetings?filter=all_meetings&sellerId={{sellerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const list = pm.response.json();",
+                  "const m = list.find(x => x.meeting_id === pm.collectionVariables.get('meetingId'));",
+                  "if (m) console.log('prep_tasks_pending_count =', m.prep_tasks_pending_count);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
