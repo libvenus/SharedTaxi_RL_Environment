@@ -1,0 +1,291 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.dv-page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  background: #f5f6f8;
+  color: #1a1a2e;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body { padding: 0px; }
+
+.main { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+
+.quarter-bar {
+  background: #f5f6f8;
+  border-bottom: 1px solid #e8eaed;
+  padding: 4px 24px;
+  font-size: 12px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.closure-badge { color: #e2001a; font-weight: 600; }
+
+.page-header { background: #f5f6f8; border-bottom: 1px solid #e8eaed; padding: 10px 0px 0; margin-top: 38px; }
+.page-header-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; padding: 0px 24px; }
+.topbar-title { font-size: 28px; font-weight: 700; color: #111; }
+
+.tabs-outer { height: 64px; background: #fff; display: flex; align-items: center; border-top: 1px solid #e8eaed; }
+.tabs { height: 40px; display: flex; gap: 0; background: #fff; justify-content: center; width: 100%; }
+.tab { padding: 8px 16px; font-size: 14px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; background: #fff; border-top: 0; border-left: 0; border-right: 0; height: 100%; display: flex; align-items: center; }
+.tab.active { color: #1a73e8; border-bottom-color: #1a73e8; font-weight: 500; background: #EFF6FF; }
+
+.content { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; gap: 20px; }
+.col-main { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.library-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: box-shadow 0.15s;
+}
+
+.library-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.library-card-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.library-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+  color: #475569;
+}
+
+.library-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.library-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.library-card-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #EFF6FF;
+  color: #1a73e8;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.library-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.library-card-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.library-card-desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.library-card-actions {
+  display: flex;
+  align-items: center;
+}
+
+.library-btn-action {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  font-size: 16px;
+  transition: background 0.15s;
+}
+
+.library-btn-action:hover {
+  background: #f1f5f9;
+}
+
+.library-btn-delete {
+  color: #ef4444;
+}
+
+.library-btn-delete:hover {
+  background: #fef2f2;
+}
+
+.sd-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #1D4ED8;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 22px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: background .15s;
+}
+.sd-action-btn:hover { background: #1F3A8A; }
+
+/* Upload dropzone */
+.library-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  background: #f8fafc;
+}
+
+.library-dropzone:hover {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.library-dropzone-active {
+  border-color: #1d4ed8;
+  background: #eff6ff;
+}
+
+/* Configure form overlay */
+.library-config-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.library-config-form {
+  padding: 20px;
+}
+
+.library-config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.library-config-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.library-config-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: #475569;
+}
+
+.library-config-close:hover {
+  background: #e2e8f0;
+}
+
+.library-config-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.library-config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.library-config-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.library-config-field input,
+.library-config-field select {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #475569;
+  outline: none;
+  width: 100%;
+}
+
+.library-config-field input:focus,
+.library-config-field select:focus {
+  border-color: #94a3b8;
+}

@@ -1,0 +1,54 @@
+{
+  "payload": {
+  "trace_id": "tr_dba5bed9721944c1a9ba39f34b06b3e1",
+  "meeting_id": "Ford-555555555555",
+  "latency_ms": 49387,
+  "valid_json": true,
+  "summary": {
+    "meetingHeader": {
+      "title": "Ford Manufacturing Team - Final Technical Review",
+      "date": "June 24, 2026",
+      "time": "10:00 PM - 11:00 PM EST",
+      "duration": "1h",
+      "platform": "Microsoft Teams",
+      "attendees": [
+        { "name": "Amit Ranjan", "email": "", "role": "Lenovo" },
+        { "name": "Brian Novak", "email": "", "role": "Ford" },
+        { "name": "Sarah Chen", "email": "", "role": "Ford" },
+        { "name": "Tom Rodriguez", "email": "", "role": "Ford" }
+      ]
+    },
+    "meetingSummary": {
+      "keyPoints": [
+        { "id": "KP001", "point": "x", "confidence": "High", "transcriptRefs": ["T10:00 PM"], "isAmbiguous": false }
+      ],
+      "confirmedNextSteps":[
+        { "id": "NS001", "task": "x", "owner": "y", "dueDate": "tomorrow", "status": "Pending", "confidence": "High", "transcriptRefs": ["T10:24 PM"] }
+      ],
+      "dealUpdatesDetected": [
+        { "id": "DU001", "entity": "Opportunity", "field": "Quantity", "currentValue": "", "suggestedValue": "1400", "reasoning": "x", "confidence": "High", "transcriptRefs": ["T10:00 PM"] }
+      ],
+      "openQuestions": [
+        { "question": "x?", "confidence": "High", "transcriptRefs": ["T10:21 PM"] }
+      ],
+      "sentiment": {
+        "customerSentiment": "Positive",
+        "reasoning": "x",
+        "confidence": "High",
+        "transcriptRefs": ["T10:38 PM"]
+      },
+      "crmUpdates": {
+        "accountName": { "value": "Ford", "confidence": "High", "transcriptRefs": [] }
+      },
+      "summaryQualityNotes": [
+        "a",
+        "b"
+
+      ]
+    }
+  },
+  "raw_text": null,
+  "downstream_status": 400
+}
+
+}

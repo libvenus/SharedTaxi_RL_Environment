@@ -1,0 +1,221 @@
+{
+  "info": {
+    "_postman_id": "us-som-timeline-2026-12",
+    "name": "Lenovo — SOM Timeline Classification (US 3.4.1)",
+    "description": "End-to-end Postman for **US 3.4.1 — Timeline Classification & Canonical Sales Clock**.\n\n**Prereqs**\n1. `uvicorn app.main:app --reload --port 8000` (v0.23.0+)\n2. Migrations:\n   - `sql/2026_10_som_interview_setup.sql`\n   - `sql/2026_11_som_organizational_intent.sql`\n   - `sql/2026_12_som_timeline_classification.sql`\n3. All 6 organizational intent cards CONFIGURED (section gate)\n\n**Variables:** `d365BaseUrl`, `adminUserId`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "d365BaseUrl", "value": "http://localhost:8000" },
+    { "key": "adminUserId", "value": "admin@lenovo.com" },
+    { "key": "cardType", "value": "tempo_classes" }
+  ],
+  "item": [
+    {
+      "name": "00 · Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": { "method": "GET", "url": "{{d365BaseUrl}}/health" }
+        }
+      ]
+    },
+    {
+      "name": "01 · Section gate",
+      "item": [
+        {
+          "name": "GET timeline section status",
+          "request": {
+            "method": "GET",
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-section-status"
+          }
+        },
+        {
+          "name": "GET org configuration-status",
+          "request": {
+            "method": "GET",
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/configuration-status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 · List & read",
+      "item": [
+        {
+          "name": "GET all timeline cards",
+          "request": {
+            "method": "GET",
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards"
+          }
+        },
+        {
+          "name": "GET tempo_classes detail",
+          "request": {
+            "method": "GET",
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/tempo_classes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 · Save without confirm (expect 428)",
+      "item": [
+        {
+          "name": "PUT tempo_classes — no confirmAgentImpact",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fields\": {},\n  \"confirmAgentImpact\": false\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/tempo_classes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 · Save all 8 cards",
+      "item": [
+        {
+          "name": "PUT tempo_classes",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"classesDeclared\": [\n      {\"className\": \"Fast/Transactional\", \"scopeDefinition\": \"Accessories, SMB laptop refresh\"},\n      {\"className\": \"Quarterly/Enterprise\", \"scopeDefinition\": \"Mid-size infrastructure deals\"},\n      {\"className\": \"Programmatic/Annual\", \"scopeDefinition\": \"Education and public procurement cycles\"},\n      {\"className\": \"Strategic/Multiyear\", \"scopeDefinition\": \"Global framework deals\"}\n    ],\n    \"defaultTempoClassRule\": \"Quarterly/Enterprise; exceptions = Strategic and Programmatic\"\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/tempo_classes"
+          }
+        },
+        {
+          "name": "PUT anchor_definitions",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"fastClassAnchor\": \"First customer meeting\",\n    \"enterpriseAnchor\": \"Architecture validation\",\n    \"programmaticAnchor\": \"RFP issuance\",\n    \"strategicAnchor\": \"Steering committee sign-off\",\n    \"reAnchorPolicy\": \"Allowed once per deal with manager reason code\",\n    \"clockPauseEvents\": [\"legal freeze\", \"procurement blackout\", \"government election code\"],\n    \"noAnchorStateRule\": \"Valid for seeded opportunities only\"\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/anchor_definitions"
+          }
+        },
+        {
+          "name": "PUT signal_expectations_time_band",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"band0to30\": {\"expectedSignals\": \"Discovery meeting and named champion\", \"acceptableSilenceDays\": 10},\n    \"band30to90\": {\"expectedSignals\": \"Solution validation and pricing discussion\", \"flatPeriodException\": \"Flat periods acceptable if procurement calendar is pending\"},\n    \"band90to180\": {\"expectedSignals\": \"Commercial/legal movement\", \"strategicClassException\": \"No risk flag for missing technical deep-dive in strategic class\"},\n    \"minimumAliveEvidenceRule\": \"Stakeholder reply or scheduled checkpoint in the last 21 days\"\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/signal_expectations_time_band"
+          }
+        },
+        {
+          "name": "PUT seasonal_delayed_activation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"activationWindows\": [{\"quarterLabel\": \"Q1\", \"description\": \"Education procurement\"}, {\"quarterLabel\": \"Q3\", \"description\": \"Enterprise refresh budget release\"}],\n    \"fiscalYearEndLowActivityRule\": \"Final 3 weeks of fiscal year close\",\n    \"preActivationActivityClassification\": \"Tagged as seeding/education and not flagged as risk\",\n    \"noActivationEscalationRule\": \"If activation never occurs within 2 cycles, auto-route to nurture queue\"\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/seasonal_delayed_activation"
+          }
+        },
+        {
+          "name": "PUT acceleration_decay",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"accelerationMarkers\": [\"New economic buyer engaged\", \"Legal review started\", \"Budget code confirmed\"],\n    \"decaySignals\": [\"21+ days of one-sided activity\", \"Repeated reschedules\", \"Scope contraction without timeline reset\"],\n    \"decayReviewThresholds\": {\"fastDays\": 30, \"enterpriseDays\": 45, \"strategicDays\": 75},\n    \"extendedToleranceRule\": \"Strategic and partner-led classes tolerate longer intentional waiting\"\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/acceleration_decay"
+          }
+        },
+        {
+          "name": "PUT multiyear_programmatic",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"programmaticLifecycleUnit\": \"Fiscal year\",\n    \"strategicLifecycleUnit\": \"Multi-year program milestone\",\n    \"formalCheckpoints\": [\"Annual budget approval\", \"Board capex cycle\", \"Partner framework renewal\"],\n    \"strategicAliveEvidence\": \"Sponsor continuity and roadmap checkpoint\",\n    \"phasedSuccessRule\": \"Success may be phased as pilot, phase-1 rollout, and scale\"\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/multiyear_programmatic"
+          }
+        },
+        {
+          "name": "PUT exit_recycle_kill",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"pauseCondition\": \"External dependency blocks progress for more than 30 days with a confirmed re-entry date\",\n    \"recycleToNurtureCondition\": \"Intent exists but budget window is more than 1 quarter out\",\n    \"closeNoDealCondition\": \"No champion, no budget, and no engagement for the threshold period\",\n    \"authorityRule\": {\"proposeRole\": \"Seller\", \"approveRole\": \"Manager\", \"recommendRole\": \"System\"},\n    \"evidenceNoteCadenceDays\": 14\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/exit_recycle_kill"
+          }
+        },
+        {
+          "name": "PUT canonical_timeline",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-Id", "value": "{{adminUserId}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmAgentImpact\": true,\n  \"fields\": {\n    \"week1to4\": {\"dominantActivity\": \"Pipeline creation\", \"kpiTarget\": \"45% of new quarterly opportunities created\", \"agentInterpretationNote\": \"Early-quarter prospecting signals are expected\"},\n    \"week5to8\": {\"dominantActivity\": \"Qualification and solutioning\", \"kpiTarget\": \"60% stage progression\", \"agentInterpretationNote\": \"Mid-quarter validation activity should dominate\"},\n    \"week9to12\": {\"dominantActivity\": \"Negotiation and closure\", \"kpiTarget\": \"75% commit protection\", \"agentInterpretationNote\": \"Late-quarter closure motion outweighs new pipeline\"},\n    \"globalAgentInterpretationRule\": \"Agents interpret identical signals differently by week context\",\n    \"q1\": {\"quarterCharacter\": \"Foundation quarter\", \"annualKpiContribution\": \"20% of annual new logo target\", \"agentInterpretationNote\": \"Lenient interpretation of early pipeline build\"},\n    \"q2\": {\"quarterCharacter\": \"Growth quarter\", \"annualKpiContribution\": \"25% of annual revenue target\", \"agentInterpretationNote\": \"Expect progression from Q1 pipeline\"},\n    \"q3\": {\"quarterCharacter\": \"Harvest quarter\", \"annualKpiContribution\": \"30% of annual revenue target\", \"agentInterpretationNote\": \"Closure and commit protection are primary\"},\n    \"q4\": {\"quarterCharacter\": \"Closure and reset quarter\", \"annualKpiContribution\": \"25% of annual revenue target\", \"agentInterpretationNote\": \"Renewed prospecting in Q4 is a recovery signal\"},\n    \"crossQuarterCarryoverRule\": \"Negotiation-stage deals carry forward without restarting the week clock\",\n    \"globalYearlyInterpretationRule\": \"Compare pace against prior quarter week-band benchmark\"\n  }\n}"
+            },
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-cards/canonical_timeline"
+          }
+        },
+        {
+          "name": "GET timeline configuration-status (8/8)",
+          "request": {
+            "method": "GET",
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/timeline-classification-configuration-status"
+          }
+        },
+        {
+          "name": "GET context-lake v3",
+          "request": {
+            "method": "GET",
+            "url": "{{d365BaseUrl}}/api/sales-operating-model/context-lake"
+          }
+        }
+      ]
+    }
+  ]
+}

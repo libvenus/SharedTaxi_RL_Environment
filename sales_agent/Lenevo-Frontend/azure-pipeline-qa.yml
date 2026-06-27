@@ -1,0 +1,96 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+ 
+resources:
+  repositories:
+   - repository: backend
+     type: git
+     name: Lenovo-Backend
+     ref: development
+     
+pool:
+  name: QA
+
+steps:
+
+# Checkout repos
+- checkout: self
+- checkout: backend
+
+
+
+
+# FRONTEND DOCKER BUILD
+
+
+- script: |
+    cd $(Build.SourcesDirectory)/Lenevo-Frontend
+    cp nginx.conf nginx.active.conf
+    docker build -t lenovo-frontend:$(Build.BuildId) .
+  displayName: "Build Frontend Docker Image"
+
+
+# BACKEND DOCKER BUILD
+
+
+- script: |
+    cd $(Build.SourcesDirectory)/Lenovo-Backend
+
+    docker build -t lenovo-backend:$(Build.BuildId) .
+  displayName: "Build Backend Docker Image"
+
+# VERIFY IMAGES
+
+
+- script: |
+    docker images
+  displayName: "Verify Docker Images"
+
+
+
+
+# DEPLOY BACKEND
+- script: |
+    docker stop lenovo-aibackend  || true
+    docker rm lenovo-aibackend || true
+
+    docker run -d \
+     --name lenovo-aibackend \
+     --network lenovo-net \
+     -p 9100:9100 \
+     lenovo-backend:$(Build.BuildId)
+
+  displayName: 'Deploy Backend'
+
+# DEPLOY FRONTEND
+- script: |
+    docker stop lenovo-frontend-qa || true
+    docker rm lenovo-frontend-qa || true
+
+    docker run -d \
+      --name lenovo-frontend-qa \
+      --network lenovo-net \
+      -p 443:443 \
+      -v /etc/pki/venafi/certs/sutherlandglobal.com.pem:/etc/nginx/ssl/sutherlandglobal.com.pem:ro \
+      -v /etc/pki/venafi/private/sutherlandglobal.com.key:/etc/nginx/ssl/sutherlandglobal.com.key:ro \
+      lenovo-frontend:$(Build.BuildId)
+
+
+  displayName: 'Deploy Frontend'
+
+# VERIFY
+- script: |
+    docker ps
+
+    echo "===== BACKEND LOGS ====="
+    docker logs lenovo-aibackend --tail 20
+
+    echo "===== FRONTEND LOGS ====="
+    docker logs lenovo-frontend-qa --tail 20
+  displayName: 'Verify Deployment'
+ 

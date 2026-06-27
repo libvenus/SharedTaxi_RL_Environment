@@ -1,0 +1,28 @@
+[project]
+name = "lenovo-d365-sales-ai"
+version = "0.1.0"
+description = "Lenovo D365 Sales AI agents and APIs"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "agent-framework-core==1.8.0",
+  "agent-framework-openai==1.8.0",
+  "python-dotenv>=1.0.0",
+  "azure-ai-projects>=1.0.0b11",
+  "azure-identity>=1.17.0",
+  "azure-monitor-opentelemetry>=1.6.0",
+  "opentelemetry-sdk>=1.25.0",
+  "fastapi>=0.111.0",
+  "uvicorn>=0.30.0",
+]
+
+[project.optional-dependencies]
+# Local dev only (DevUI playground via serve.bat). Excluded from the Docker
+# image to keep it small. Install locally with: uv sync --extra dev
+dev = [
+  "agent-framework-devui>=1.0.0b260528",
+]
+
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"

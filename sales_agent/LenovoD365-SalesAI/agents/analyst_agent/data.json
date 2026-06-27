@@ -1,0 +1,51 @@
+{
+  "opportunities": {
+    "opp-101": {
+      "name": "ThinkPad X1 Carbon Refresh - Contoso",
+      "account_id": "acc-001",
+      "stage": "Propose",
+      "value_usd": 125000,
+      "close_date": "2026-07-15",
+      "owner": "alex.tan@lenovo.com",
+      "products": "ThinkPad X1 Carbon Gen 11 (x200)"
+    },
+    "opp-102": {
+      "name": "ThinkStation P Series Rollout - Contoso",
+      "account_id": "acc-001",
+      "stage": "Develop",
+      "value_usd": 380000,
+      "close_date": "2026-08-30",
+      "owner": "alex.tan@lenovo.com",
+      "products": "ThinkStation P5 (x120)"
+    },
+    "opp-201": {
+      "name": "ThinkSystem SR650 Data Center Upgrade - Fabrikam",
+      "account_id": "acc-002",
+      "stage": "Close",
+      "value_usd": 500000,
+      "close_date": "2026-06-30",
+      "owner": "maria.garcia@lenovo.com",
+      "products": "ThinkSystem SR650 (x50)"
+    }
+  },
+  "seller_activities": {
+    "alex.tan@lenovo.com": {
+      "calls_last_7d": 8,
+      "emails_last_7d": 24,
+      "meetings_last_7d": 3,
+      "hours_booked_next_7d": 12.5
+    },
+    "maria.garcia@lenovo.com": {
+      "calls_last_7d": 12,
+      "emails_last_7d": 31,
+      "meetings_last_7d": 5,
+      "hours_booked_next_7d": 18.0
+    },
+    "john.smith@lenovo.com": {
+      "calls_last_7d": 5,
+      "emails_last_7d": 15,
+      "meetings_last_7d": 2,
+      "hours_booked_next_7d": 6.0
+    }
+  }
+}

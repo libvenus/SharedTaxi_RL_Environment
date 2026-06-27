@@ -1,0 +1,60 @@
+.settings-form-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-form-card .settings-form-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.settings-form-card .settings-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-form-card .settings-form-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.settings-form-card .settings-form-input {
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  height: 38px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #475569;
+  width: 100%;
+  outline: none;
+}
+
+.settings-form-card .settings-form-input:focus {
+  border-color: #1d4ed8;
+}
+
+.ex-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #1f3a8a;
+  color: #fff;
+  font-size: 13px;
+  padding: 8px 22px;
+  border-radius: 50px !important;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+  margin-top: auto;
+  align-self: flex-start;
+  transition: background 0.15s;
+}

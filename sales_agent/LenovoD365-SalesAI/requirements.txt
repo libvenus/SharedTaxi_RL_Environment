@@ -1,0 +1,9 @@
+agent-framework-core==1.8.0
+agent-framework-openai==1.8.0
+python-dotenv>=1.0.0
+azure-ai-projects>=1.0.0b11
+azure-identity>=1.17.0
+azure-monitor-opentelemetry>=1.6.0
+opentelemetry-sdk>=1.25.0
+fastapi>=0.111.0
+uvicorn>=0.30.0
